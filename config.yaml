@@ -13,7 +13,7 @@ groups.chunk.size: 200
 resources:
   run:
     # meta-analysis rule which takes up a lot of memory.
-    mem_mb: 
+    mem-mb: 
 
 SMMAT.config:
   Burden: false
