@@ -1,0 +1,6 @@
+include: 'rules/meta-analysis.smk'
+
+
+rule all:
+    input:
+        expand(rules.collate_phenotype.output[0], phenotype=set(run_list['phenotype']), allow_missing=True)

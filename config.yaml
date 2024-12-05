@@ -1,0 +1,23 @@
+
+run-list: 'run-list.csv'
+
+group.file: ''
+
+container: ''
+
+
+# Number of groups to analyse per batch
+groups.chunk.size: 200
+
+
+SMMAT.config:
+  Burden: false
+  SKATO: true
+  SKAT: false
+  SMMAT: true
+  use_minor_allele: true
+  miss_cutoff: 0.01
+  rho: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+  method: 'davies'
+  MAF_weights_beta: [1, 1]
+  MAF_range: [1e-10, 0.05]
