@@ -56,6 +56,8 @@ rule run:
     params:
         SMMAT_config=config['SMMAT.config']
     threads: workflow.cores
+    resources:
+        mem_mb=config['resources']['run']['mem-mb']
     output:
         result=temp('{output}/{phenotype}/chr{chrom}/chunk_{num}.result')
     container: config['container']
