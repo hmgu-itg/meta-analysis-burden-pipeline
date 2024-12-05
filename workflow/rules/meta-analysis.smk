@@ -25,8 +25,8 @@ rule split_scorevar:
         vars=lambda w: split_scorevar_input(w)[1],
         groupfile=config['group.file']
     output:
-        combined_scores=temp('{output}/{phenotype}/per-cohort/{cohort}/chr{chrom}/all.scores.txt'),
-        combined_covms=temp('{output}/{phenotype}/per-cohort/{cohort}/chr{chrom}/all.covms.RData')
+        combined_scores=temp('output/{phenotype}/per-cohort/{cohort}/chr{chrom}/all.scores.txt'),
+        combined_covms=temp('output/{phenotype}/per-cohort/{cohort}/chr{chrom}/all.covms.RData')
     container: config['container']
     script:
         '../scripts/split-score-var.R'
@@ -37,7 +37,7 @@ rule create_chunk_score_var:
         combined_scores=rules.split_scorevar.output.combined_scores,
         combined_covms=rules.split_scorevar.output.combined_covms
     output:
-        data=temp('{output}/{phenotype}/per-cohort/{cohort}/chr{chrom}/chunk_{num}.RData')
+        data=temp('output/{phenotype}/per-cohort/{cohort}/chr{chrom}/chunk_{num}.RData')
     container: config['container']
     script:
         '../scripts/create_chunk_group_score_var.R'
@@ -59,14 +59,14 @@ rule run:
     resources:
         mem_mb=config['resources']['run']['mem-mb']
     output:
-        result=temp('{output}/{phenotype}/chr{chrom}/chunk_{num}.result')
+        result=temp('output/{phenotype}/chr{chrom}/chunk_{num}.result')
     container: config['container']
     script:
         '../scripts/analyse.R'
 
 
 def collate_chrom_input(w):
-    chunk_count = pd.read_csv(checkpoints.create_all_chunk_groups.get(output=w.output, chrom=w.chrom).output[0],
+    chunk_count = pd.read_csv(checkpoints.create_all_chunk_groups.get(chrom=w.chrom).output[0],
                                 header = None)[0][0]
     chunk_nums = range(0, chunk_count)
     return expand(rules.run.output.result, num=chunk_nums, allow_missing=True)
@@ -75,7 +75,7 @@ rule collate_chrom:
     input:
         collate_chrom_input
     output:
-        '{output}/{phenotype}/chr{chrom}.results.txt'
+        'output/{phenotype}/chr{chrom}.results.txt'
     run:
         combined = pd.concat([pd.read_csv(f, header = 0) for f in input])
         unique_groups = run_list.loc[run_list["chrom"].astype(str)==str(w.chrom), 'group'].drop_duplicates()
@@ -92,7 +92,7 @@ rule collate_phenotype:
     input:
         collate_phenotype_input
     output:
-        '{output}/{phenotype}.csv'
+        'output/{phenotype}.csv'
     run:
         combined = pd.concat([pd.read_csv(f, header = 0) for f in input])
         unique_groups = run_list.loc[run_list["chrom"].astype(str)==str(w.chrom), 'group'].drop_duplicates()
