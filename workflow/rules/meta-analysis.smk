@@ -78,7 +78,7 @@ rule collate_chrom:
         'output/{phenotype}/chr{chrom}.results.txt'
     run:
         combined = pd.concat([pd.read_csv(f, header = 0) for f in input])
-        unique_groups = run_list.loc[run_list["chrom"].astype(str)==str(w.chrom), 'group'].drop_duplicates()
+        unique_groups = run_list.loc[run_list["chrom"].astype(str)==str(wildcards.chrom), 'group'].drop_duplicates()
         combined['group'] = pd.Categorical(combined['group'], categories=unique_groups, ordered=True)
         combined.sort_values('group', inplace=True)
         combined.to_csv(output[0], header = True, index = False)
@@ -95,7 +95,7 @@ rule collate_phenotype:
         'output/{phenotype}.csv'
     run:
         combined = pd.concat([pd.read_csv(f, header = 0) for f in input])
-        unique_groups = run_list.loc[run_list["chrom"].astype(str)==str(w.chrom), 'group'].drop_duplicates()
+        unique_groups = run_list.loc[run_list["chrom"].astype(str)==str(wildcards.chrom), 'group'].drop_duplicates()
         combined['group'] = pd.Categorical(combined['group'], categories=unique_groups, ordered=True)
         combined.sort_values('group', inplace=True)
         combined.to_csv(output[0], header = True, index = False)
