@@ -3,6 +3,8 @@ library(GMMAT)
 library(doMC)
 library(foreach)
 
+sink(snakemake@log[[1]])
+
 all.Rdata = snakemake@input[['data']]
 
 all.cohort.scores = list()
@@ -204,9 +206,10 @@ results <- foreach(i = 1:n.groups,
             else output$E.pval <- tryCatch(pchisq(-2*log(output$B.pval)-2*log(GMMAT:::.quad_pval(U = U, V = V, method = method)), df = 4, lower.tail = FALSE), error = function(e) { output$B.pval })
         }
     }
+    print(paste("Completed index:", i, "; group:", selected.group))
     return(output)
 }
-
+sink()
 # Combine results into final output
 results = results[match(subset.groups, results$group), ]
 
