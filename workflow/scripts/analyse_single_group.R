@@ -164,6 +164,9 @@ results <- foreach(i = 1:n.groups,
     U <- U * weight
     V <- t(V*weight)*weight
     output = data.frame(group = selected.group, n.variants = n.variants, cohorts=included.cohorts.pasted)
+    if (is.na(max(V))) {
+        stop(paste0("NA value detected in covariance matrix for ", selected.group, " group"))
+    }
     if(max(V)-min(V) < sqrt(.Machine$double.eps)) {
         burden.score <- sum(U)
         burden.var <- sum(V)
