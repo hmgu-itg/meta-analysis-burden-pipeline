@@ -37,8 +37,8 @@ subset.groups = c(snakemake@wildcards[['group']]) # fread(snakemake@input[['grou
 n.groups = length(subset.groups)
 
 group.info = fread(snakemake@input[['groupfile']], header = FALSE, colClasses = list(
-    character = c(1, 2, 4, 5),
-    numeric = c(3, 6)
+    character = c(1, 2, 3, 4, 5),
+    numeric = c(6)
 ))
 setnames(group.info, c("group", "chr", "pos", "ref", "alt", "weight"))
 
