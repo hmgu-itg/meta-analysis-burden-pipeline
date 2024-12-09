@@ -14,6 +14,9 @@ resources:
   run:
     # meta-analysis rule which takes up a lot of memory.
     mem-mb: 
+    # number of cores to use in parallel.
+    # There is no need to have this number higher than the `groups.chunk.size`.
+    cores: 
 
 SMMAT.config:
   Burden: false

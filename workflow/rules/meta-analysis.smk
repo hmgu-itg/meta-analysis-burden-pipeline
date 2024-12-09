@@ -55,7 +55,7 @@ rule run:
         groupfile=config['group.file']
     params:
         SMMAT_config=config['SMMAT.config']
-    threads: workflow.cores
+    threads: config['resources']['run']['cores']
     resources:
         mem_mb=config['resources']['run']['mem-mb']
     log:
