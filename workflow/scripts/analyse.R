@@ -43,7 +43,7 @@ group.info = fread(snakemake@input[['groupfile']], header = FALSE, colClasses = 
 setnames(group.info, c("group", "chr", "pos", "ref", "alt", "weight"))
 
 group.info = group.info[group %in% subset.groups]
-group.info[,variant.id:=paste(group, chr, pos, ref, alt, sep = ":")]
+group.info[,variant.id:=paste(group, chr, format(pos, scientific = FALSE), ref, alt, sep = ":")]
 if (any(duplicated(group.info$variant.id))) {
     warning("Duplicated variant ID detected in group.file. Excluding all duplicates, but this should be checked!!")
     group.info <- group.info[!duplicated(variant.id), ]
