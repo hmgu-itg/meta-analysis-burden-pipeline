@@ -67,6 +67,23 @@ rule run:
         '../scripts/analyse.R'
 
 
+rule debug_run_single_group:
+    input:
+        data=run_input,
+        groups=rules.create_chunk_groups.output[0],
+        groupfile=config['group.file']
+    params:
+        SMMAT_config=config['SMMAT.config']
+    threads: workflow.cores
+    resources:
+        mem_mb=config['resources']['run']['mem-mb']
+    output:
+        result=temp('output/{phenotype}/debug/chr{chrom}/debug.chunk_{num}.{group}.result')
+    container: config['container']
+    script:
+        '../scripts/analyse_single_group.R'
+
+
 def collate_chrom_input(w):
     chunk_count = pd.read_csv(checkpoints.create_all_chunk_groups.get(chrom=w.chrom).output[0],
                                 header = None)[0][0]
