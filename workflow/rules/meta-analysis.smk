@@ -58,6 +58,7 @@ rule run:
     threads: config['resources']['run']['cores']
     resources:
         mem_mb=config['resources']['run']['mem-mb']
+    priority: 80
     log:
         'output/{phenotype}/chr{chrom}/chunk_{num}.log'
     output:
@@ -95,6 +96,7 @@ rule collate_chrom:
         collate_chrom_input
     output:
         'output/{phenotype}/chr{chrom}.results.txt'
+    priority: 90
     run:
         combined = pd.concat([pd.read_csv(f, header = 0) for f in input])
         unique_groups = group_info.loc[group_info["chrom"].astype(str)==str(wildcards.chrom), 'group'].drop_duplicates()
@@ -112,6 +114,7 @@ rule collate_phenotype:
         collate_phenotype_input
     output:
         'output/{phenotype}.csv'
+    priority: 100
     run:
         combined = pd.concat([pd.read_csv(f, header = 0) for f in input])
         unique_groups = group_info['group'].drop_duplicates()
