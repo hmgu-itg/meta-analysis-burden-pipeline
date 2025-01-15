@@ -25,8 +25,8 @@ rule split_scorevar:
         vars=lambda w: split_scorevar_input(w)[1],
         groupfile=config['group.file']
     output:
-        combined_scores=temp('output/{phenotype}/per-cohort/{cohort}/chr{chrom}/all.scores.txt'),
-        combined_covms=temp('output/{phenotype}/per-cohort/{cohort}/chr{chrom}/all.covms.RData')
+        combined_scores=ensure(temp('output/{phenotype}/per-cohort/{cohort}/chr{chrom}/all.scores.txt'), non_empty=True),
+        combined_covms=ensure(temp('output/{phenotype}/per-cohort/{cohort}/chr{chrom}/all.covms.RData'), non_empty=True)
     container: config['container']
     script:
         '../scripts/split-score-var.R'
@@ -37,7 +37,7 @@ rule create_chunk_score_var:
         combined_scores=rules.split_scorevar.output.combined_scores,
         combined_covms=rules.split_scorevar.output.combined_covms
     output:
-        data=temp('output/{phenotype}/per-cohort/{cohort}/chr{chrom}/chunk_{num}.RData')
+        data=ensure(temp('output/{phenotype}/per-cohort/{cohort}/chr{chrom}/chunk_{num}.RData'), non_empty=True)
     container: config['container']
     script:
         '../scripts/create_chunk_group_score_var.R'
@@ -113,7 +113,7 @@ rule collate_phenotype:
     input:
         collate_phenotype_input
     output:
-        'output/{phenotype}.csv'
+        protected('output/{phenotype}.csv')
     priority: 100
     run:
         combined = pd.concat([pd.read_csv(f, header = 0) for f in input])
