@@ -62,7 +62,7 @@ rule run:
     log:
         'output/{phenotype}/chr{chrom}/chunk_{num}.log'
     output:
-        result=temp('output/{phenotype}/chr{chrom}/chunk_{num}.result')
+        result=ensure(temp('output/{phenotype}/chr{chrom}/chunk_{num}.result'), non_empty=True)
     container: config['container']
     script:
         '../scripts/analyse.R'
@@ -95,7 +95,7 @@ rule collate_chrom:
     input:
         collate_chrom_input
     output:
-        'output/{phenotype}/chr{chrom}.results.txt'
+        ensure('output/{phenotype}/chr{chrom}.results.txt', non_empty=True)
     priority: 90
     run:
         combined = pd.concat([pd.read_csv(f, header = 0) for f in input])

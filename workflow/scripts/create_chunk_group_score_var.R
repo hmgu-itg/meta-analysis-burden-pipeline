@@ -29,3 +29,5 @@ cohort.data = list(
     covms = chunk.covms
 )
 save(cohort.data, file = snakemake@output[['data']])
+
+load(snakemake@output[['data']]) # Try loading straight after saving to ensure it saved correctly
