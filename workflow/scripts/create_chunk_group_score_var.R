@@ -6,11 +6,13 @@ output.var.file = snakemake@output[['var']]
 cohort_ = snakemake@wildcards[['cohort']]
 chrom_ = snakemake@wildcards[['chrom']]
 
+# turn warnings into errors
+options(warn = 2) # This is to prevent fread from only raising a warning when a row with truncated data is read
 
-subset.groups = fread(snakemake@input[['groups']], header=F)$V1
+subset.groups = fread(snakemake@input[['groups']], header=F, fill = FALSE)$V1
 
 # Load, subset, and output score file
-cohort.scores = fread(snakemake@input[['combined_scores']])
+cohort.scores = fread(snakemake@input[['combined_scores']], fill = FALSE)
 
 score = cohort.scores[
         chr == chrom_

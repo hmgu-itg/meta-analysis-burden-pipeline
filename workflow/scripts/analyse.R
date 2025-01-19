@@ -33,10 +33,10 @@ MAF.weights.beta = SMMAT.config[['MAF_weights_beta']]
 MAF.range = as.numeric(SMMAT.config[['MAF_range']])
 
 
-subset.groups = fread(snakemake@input[['groups']], header=F)$V1
+subset.groups = fread(snakemake@input[['groups']], header=F, fill=F)$V1
 n.groups = length(subset.groups)
 
-group.info = fread(snakemake@input[['groupfile']], header = FALSE, colClasses = list(
+group.info = fread(snakemake@input[['groupfile']], header = FALSE, fill = FALSE, colClasses = list(
     character = c(1, 2, 3, 4, 5),
     numeric = c(6)
 ))
