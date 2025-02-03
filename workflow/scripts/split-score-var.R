@@ -1,5 +1,9 @@
 library(data.table)
 
+options(warn = 2)
+# This is so that a warning message is instead raised as an
+# error and terminates the script when encountered.
+
 score.files = snakemake@input[['scores']]
 var.files = snakemake@input[['vars']]
 group.file = snakemake@input[['groupfile']]
@@ -63,6 +67,9 @@ for(i in 1:n.files) {
         group.n.p = nrow(score[group==selected.group])
         group.V = matrix(0, group.n.p, group.n.p)
         group.V[lower.tri(group.V, diag = TRUE)] <- readBin(con, what = "numeric", n = (1+group.n.p)*group.n.p/2, size = 4)
+        # `options(warn = 2)` is set for the above line
+        # so that it terminates when the var.file runs out of values to read
+        # while there is still values to be filled in the grou.V matrix (Read the error.md for more details).
         group.V[upper.tri(group.V)] <- t(group.V)[upper.tri(group.V)]
         if (all(group.V == 0)) {
             stop(paste("Failed to recreate covariance matrix for", group, "in", var.file))
